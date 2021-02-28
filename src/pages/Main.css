@@ -1,0 +1,19 @@
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.center-input {
+    padding-top: 50%;
+    margin: auto;
+}
+
+.margin {
+    margin: 0 10% 0 10%;
+}
+
+.border {
+    border: solid 2px white;
+    border-radius: 5%;
+    margin: 1%;
+}
