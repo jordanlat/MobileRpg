@@ -9,7 +9,11 @@
 }
 
 .margin {
-    margin: 0 10% 0 10%;
+    margin: 0 5% 0 5%;
+}
+
+.margin-all {
+    margin: auto;
 }
 
 .border {

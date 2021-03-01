@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IonButton, IonCol, IonContent, IonGrid, IonHeader, IonInput, IonItem, IonLabel, IonLifeCycleContext, IonList, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react';
-import nameList from '../components/listeMon';
+import nameList from '../components/listeNom';
 import './Main.css';
 
 let Vilain_name = nameList[random(498)];
@@ -12,10 +12,13 @@ function random(nbr: number) {
 }
 
 const Main: React.FC = () => {
-  // const [name, setName] = useState<string>();
-  const [rdmName, setRdmName] = useState<string>();
   const [hideInput, sethideInput] = useState<boolean>(false);
-  const [textEvent, setTextEvent] = useState(["Bonjour", "Commet allez vous ?"]);
+  const [textEvent, setTextEvent] = useState([
+    "Bonjour ",
+    "J'espere que vous allez bien!",
+    "Moi je vais plutot bien :)",
+    "Debutons cette nouvelle aventure !"
+  ]);
   let hero_max_life = random(100);
   let vilain_max_life = random(100);
   const [hero, setHero] = useState({
@@ -54,14 +57,7 @@ const Main: React.FC = () => {
     console.log(hero);
   }
 
-
-
-  function getName() {
-    return hero.name;
-  }
-
   function valideName() {
-    //console.log(getName());
     sethideInput(true);
   }
 
@@ -80,12 +76,25 @@ const Main: React.FC = () => {
   }
 
   function write(text: string) {
-
     if (textEvent.length > 3) {
       textEvent.splice(0, 1);
     }
     const newText = text;
-    setTextEvent([...textEvent, newText]);
+    setTimeout(() => { //Start the timer
+      setTextEvent([...textEvent, newText]); //After 1 second, set render to true
+    }, 450);
+  }
+
+  function adventure (){
+    const wichAdventure = random(10);
+
+    if(wichAdventure<=4) {
+      write("On a fait le tour, mais il ne s'est rien passer...");
+    } else if (wichAdventure>4 && wichAdventure<8){
+      write("Oh non un bandit t'attaque !");
+    } else {
+      write("Hoho tu as trouver des pieces d'or");
+    }
   }
 
   return (
@@ -113,21 +122,23 @@ const Main: React.FC = () => {
         <IonContent hidden={!hideInput}>
           <IonRow>
             <IonCol className="border">
-              <IonLabel>Hero</IonLabel>
-              <p>Name: {hero.name}</p>
-              <p>Attack: {hero.atk}</p>
-              <p>Defense: {hero.def}</p>
-              <p>Coin: {hero.coin}</p>
-              <p>Experience: {hero.exp}</p>
+              <IonLabel className="center">Hero</IonLabel>
+              <p className="center">Name: {hero.name}</p>
+              <p className="center">Life: {hero.life}/{hero.maxLife}</p>
+              <p className="center">Attack: {hero.atk}</p>
+              <p className="center">Defense: {hero.def}</p>
+              <p className="center">Coin: {hero.coin}</p>
+              <p className="center">Experience: {hero.exp}</p>
 
             </IonCol>
             <IonCol className="border">
-              <IonLabel>Vilain</IonLabel>
-              <p>Name: {vilain.name}</p>
-              <p>Attack: {vilain.atk}</p>
-              <p>Defense: {vilain.def}</p>
-              <p>Coin: {vilain.coin}</p>
-              <p>Experience: {vilain.exp}</p>
+              <IonLabel className="center">Vilain</IonLabel>
+              <p className="center">Name: {vilain.name}</p>
+              <p className="center">Life: {vilain.life}/{vilain.maxLife}</p>
+              <p className="center">Attack: {vilain.atk}</p>
+              <p className="center">Defense: {vilain.def}</p>
+              <p className="center">Coin: {vilain.coin}</p>
+              <p className="center">Experience: {vilain.exp}</p>
             </IonCol>
           </IonRow>
           <IonGrid>
@@ -142,7 +153,7 @@ const Main: React.FC = () => {
           <IonGrid hidden={!hideInput}>
             <IonCol>
               <IonRow className="border">
-                <IonButton onClick={() => test()}>Adventure</IonButton>
+                <IonButton onClick={() => adventure()}>Adventure</IonButton>
                 <IonButton onClick={() => { write("Coucou" + 5) }}>Rest</IonButton>
               </IonRow>
             </IonCol>
