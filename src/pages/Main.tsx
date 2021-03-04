@@ -13,6 +13,7 @@ function random(nbr: number) {
 
 const Main: React.FC = () => {
   const [hideInput, sethideInput] = useState<boolean>(false);
+  const [hideVilain, sethideVilain] = useState<boolean>(false);
   const [textEvent, setTextEvent] = useState([
     "Bonjour ",
     "J'espere que vous allez bien!",
@@ -40,7 +41,27 @@ const Main: React.FC = () => {
     coin: random(10),
     exp: 0,
   });
+  
+  function updateHero(attrib: string, value: any){
+    let h_stats = JSON.parse(JSON.stringify(hero));
 
+    if (attrib === "life"){
+      h_stats.life = value;
+    } else if(attrib === "maxLife"){
+      h_stats.maxLife = value;
+    } else if(attrib === "atk"){
+      h_stats.atk = value;
+    } else if(attrib === "def"){
+      h_stats.def = value;
+    } else if(attrib === "coin"){
+      h_stats.coin = value;
+    } else if(attrib === "exp"){
+      h_stats.exp = value;
+    } else if(attrib === "name"){
+      h_stats.name = value;
+    }
+    setHero(h_stats);
+  }
 
   function test() {
     Vilain_name = nameList[random(498)];
@@ -61,27 +82,13 @@ const Main: React.FC = () => {
     sethideInput(true);
   }
 
-  function setHeroName(inName: string) {
-    Hero_name = inName;
-    setHero({
-      name: Hero_name,
-      life: hero.life,
-      maxLife: hero.maxLife,
-      atk: hero.atk,
-      def: hero.def,
-      coin: hero.coin,
-      exp: hero.exp
-    });
-    console.log("setHeroName: ", hero);
-  }
-
   function write(text: string) {
     if (textEvent.length > 3) {
       textEvent.splice(0, 1);
     }
     const newText = text;
     setTimeout(() => { //Start the timer
-      setTextEvent([...textEvent, newText]); //After 1 second, set render to true
+      setTextEvent([...textEvent, newText]); //After 0.450 second, set render to true
     }, 450);
   }
 
@@ -89,13 +96,26 @@ const Main: React.FC = () => {
     const wichAdventure = random(10);
 
     if(wichAdventure<=4) {
+      // Rien
       write("On a fait le tour, mais il ne s'est rien passer...");
     } else if (wichAdventure>4 && wichAdventure<8){
+      // Ennemi apparait
       write("Oh non un bandit t'attaque !");
+      sethideVilain(true);
     } else {
-      write("Hoho tu as trouver des pieces d'or");
+      // Gain exp
+      winExp ();
     }
   }
+
+  function winExp (){
+    const gainExp = random(100);
+    write("Hoho tu as aidée un passant, tu gagnes " + gainExp + "pts d'exp");
+
+  }
+
+
+
 
   return (
     <IonPage className="margin">
@@ -112,7 +132,7 @@ const Main: React.FC = () => {
                 <IonLabel position="floating">Enter nickname</IonLabel>
                 <IonInput
                   onKeyPress={e => { if (e.key === 'Enter') { valideName() } }}
-                  onIonChange={e => { setHeroName(e.detail.value!) }}
+                  onIonChange={e => { updateHero('name', e.detail.value!) }}
                 ></IonInput>
               </IonItem>
             </IonCol>
@@ -131,7 +151,7 @@ const Main: React.FC = () => {
               <p className="center">Experience: {hero.exp}</p>
 
             </IonCol>
-            <IonCol className="border">
+            <IonCol className="border" hidden={!hideVilain}>
               <IonLabel className="center">Vilain</IonLabel>
               <p className="center">Name: {vilain.name}</p>
               <p className="center">Life: {vilain.life}/{vilain.maxLife}</p>
@@ -154,7 +174,7 @@ const Main: React.FC = () => {
             <IonCol>
               <IonRow className="border">
                 <IonButton onClick={() => adventure()}>Adventure</IonButton>
-                <IonButton onClick={() => { write("Coucou" + 5) }}>Rest</IonButton>
+                <IonButton onClick={() => { updateHero('exp', 10) }}>Rest</IonButton>
               </IonRow>
             </IonCol>
           </IonGrid>
