@@ -14,6 +14,7 @@ function random(nbr: number) {
 const Main: React.FC = () => {
   const [hideInput, sethideInput] = useState<boolean>(false);
   const [hideVilain, sethideVilain] = useState<boolean>(false);
+  const [hideAtkMenu, sethideAtkMenu] = useState<boolean>(false);
   const [textEvent, setTextEvent] = useState([
     "Bonjour ",
     "J'espere que vous allez bien!",
@@ -42,43 +43,43 @@ const Main: React.FC = () => {
     exp: random(10),
   });
 
-  function updateHero(attrib: string, value: any){
+  function updateHero(attrib: string, value: any) {
     let h_stats = JSON.parse(JSON.stringify(hero));
 
-    if (attrib === "life"){
+    if (attrib === "life") {
       h_stats.life = value;
-    } else if(attrib === "maxLife"){
+    } else if (attrib === "maxLife") {
       h_stats.maxLife = value;
-    } else if(attrib === "atk"){
+    } else if (attrib === "atk") {
       h_stats.atk = value;
-    } else if(attrib === "def"){
+    } else if (attrib === "def") {
       h_stats.def = value;
-    } else if(attrib === "coin"){
+    } else if (attrib === "coin") {
       h_stats.coin = value;
-    } else if(attrib === "exp"){
+    } else if (attrib === "exp") {
       h_stats.exp = value;
-    } else if(attrib === "name"){
+    } else if (attrib === "name") {
       h_stats.name = value;
     }
     setHero(h_stats);
   }
 
-  function updateVilain(attrib: string, value: any){
+  function updateVilain(attrib: string, value: any) {
     let v_stats = JSON.parse(JSON.stringify(vilain));
 
-    if (attrib === "life"){
+    if (attrib === "life") {
       v_stats.life = value;
-    } else if(attrib === "maxLife"){
+    } else if (attrib === "maxLife") {
       v_stats.maxLife = value;
-    } else if(attrib === "atk"){
+    } else if (attrib === "atk") {
       v_stats.atk = value;
-    } else if(attrib === "def"){
+    } else if (attrib === "def") {
       v_stats.def = value;
-    } else if(attrib === "coin"){
+    } else if (attrib === "coin") {
       v_stats.coin = value;
-    } else if(attrib === "exp"){
+    } else if (attrib === "exp") {
       v_stats.exp = value;
-    } else if(attrib === "name"){
+    } else if (attrib === "name") {
       v_stats.name = value;
     }
     setVilain(v_stats);
@@ -113,26 +114,32 @@ const Main: React.FC = () => {
     }, 450);
   }
 
-  function adventure (){
+  function adventure() {
     const wichAdventure = random(10);
 
-    if(wichAdventure<=4) {
+    if (wichAdventure <= 4) {
       // Rien
       write("On a fait le tour, mais il ne s'est rien passer...");
-    } else if (wichAdventure>4 && wichAdventure<8){
+    } else if (wichAdventure > 4 && wichAdventure < 8) {
       // Ennemi apparait
-      write("Oh non un bandit t'attaque !");
-      sethideVilain(true);
+      vilainAttackYou();
     } else {
       // Gain exp
-      winExp ();
+      winExp();
     }
   }
 
-  function winExp (){
+  function vilainAttackYou() {
+    write("Oh non un bandit t'attaque !");
+    sethideVilain(true);
+    sethideAtkMenu(true);
+
+  }
+
+  function winExp() {
     const gainExp = random(100);
     write("Hoho tu as aidée un passant, tu gagnes " + gainExp + "pts d'exp");
-
+    updateHero("exp", hero.exp + gainExp);
   }
 
 
@@ -193,10 +200,20 @@ const Main: React.FC = () => {
           </IonGrid>
           <IonGrid hidden={!hideInput}>
             <IonCol>
-              <IonRow className="border">
+              <IonRow className="border" hidden={hideAtkMenu}>
                 <IonButton onClick={() => adventure()}>Adventure</IonButton>
                 <IonButton onClick={() => { updateHero('exp', 10) }}>Rest</IonButton>
               </IonRow>
+              <div hidden={!hideAtkMenu} className="border">
+                <IonRow>
+                  <IonButton onClick={() => adventure()}>Low attack</IonButton>
+                  <IonButton onClick={() => { updateHero('exp', 10) }}>Super Attack</IonButton>
+                </IonRow>
+                <IonRow>
+                  <IonButton onClick={() => adventure()}>Heal</IonButton>
+                  <IonButton onClick={() => adventure()}>Escape</IonButton>
+                </IonRow>
+              </div>
             </IonCol>
           </IonGrid>
         </IonContent>
