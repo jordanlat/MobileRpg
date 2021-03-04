@@ -39,9 +39,9 @@ const Main: React.FC = () => {
     atk: random(10),
     def: random(10),
     coin: random(10),
-    exp: 0,
+    exp: random(10),
   });
-  
+
   function updateHero(attrib: string, value: any){
     let h_stats = JSON.parse(JSON.stringify(hero));
 
@@ -61,6 +61,27 @@ const Main: React.FC = () => {
       h_stats.name = value;
     }
     setHero(h_stats);
+  }
+
+  function updateVilain(attrib: string, value: any){
+    let v_stats = JSON.parse(JSON.stringify(vilain));
+
+    if (attrib === "life"){
+      v_stats.life = value;
+    } else if(attrib === "maxLife"){
+      v_stats.maxLife = value;
+    } else if(attrib === "atk"){
+      v_stats.atk = value;
+    } else if(attrib === "def"){
+      v_stats.def = value;
+    } else if(attrib === "coin"){
+      v_stats.coin = value;
+    } else if(attrib === "exp"){
+      v_stats.exp = value;
+    } else if(attrib === "name"){
+      v_stats.name = value;
+    }
+    setVilain(v_stats);
   }
 
   function test() {
