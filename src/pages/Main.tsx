@@ -138,11 +138,78 @@ const Main: React.FC = () => {
 
   function winExp() {
     const gainExp = random(100);
-    write("Hoho tu as aidée un passant, tu gagnes " + gainExp + "pts d'exp");
+    write("Hoho tu as aidée un passant, tu gagnes " + gainExp + " pts d'exp");
     updateHero("exp", hero.exp + gainExp);
   }
 
+function check_vil_life(life_lose: number){
+  write(vilain.name + " a perdu " + life_lose + ' pts de vie.');
+  if (life_lose > vilain.life) {
+    // Si on bat le vilain
+    updateVilain('life', 0);
+    write("Tu a vaincu " + vilain.name + '.');
+    write("Tu gagnes " + vilain.coin + " coins.");
+    write("Et tu recupere " + vilain.exp + " exp");
+    updateHero('coin', (hero.coin + vilain.coin));
+    updateHero('coin', (hero.exp + vilain.exp));
+  } else {
+    updateVilain('life', life_lose);
+  }
+}
 
+  function h_atk(type: string) {
+
+    if (type === 'low') {
+      const dice = random(5);
+      if (dice < 4) {
+        const atk_power = random(hero.atk);
+        const lost_life = vilain.life - (atk_power - vilain.def);
+        check_vil_life(lost_life);
+      } else {
+        check_vil_life(hero.atk);
+      }
+
+    } else if (type === 'high') {
+      const dice = random(9);
+      if (dice<7){
+        write("Oh non tu as louper ton coup.");
+      } else {
+        const max_power = ((hero.atk+ (hero.atk/2)) * (random(5)));
+        write("WOW quel coup !");
+        check_vil_life(max_power);
+      }
+    }
+  }
+
+  function heal(perso: string) {
+    if (perso === 'hero') {
+      if (hero.life < hero.maxLife) {
+        const heal_power = random(80);
+        if ((hero.life + heal_power) >= hero.maxLife) {
+          updateHero('life', hero.maxLife);
+          write("Ouah tu as recuperer toute ta vie!");
+        } else {
+          updateHero('life', hero.maxLife);
+          write("Tu recupere " + heal_power + " pts de vie.");
+        }
+      } else {
+        write("Tu es deja max life hehe");
+      }
+    } else if (perso === 'vilain') {
+      if (vilain.life < vilain.maxLife) {
+        const heal_power = random(80);
+        if ((vilain.life + heal_power) >= vilain.maxLife) {
+          updateHero('life', vilain.maxLife);
+          write("Oh non il a recuperer toute sa vie!");
+        } else {
+          updateHero('life', vilain.maxLife);
+          write("Il a recupere " + heal_power + " pts de vie.");
+        }
+      } else {
+        write("hehe il ce soigne pour rien....");
+      }
+    }
+  }
 
 
   return (
@@ -202,15 +269,15 @@ const Main: React.FC = () => {
             <IonCol>
               <IonRow className="border" hidden={hideAtkMenu}>
                 <IonButton onClick={() => adventure()}>Adventure</IonButton>
-                <IonButton onClick={() => { updateHero('exp', 10) }}>Rest</IonButton>
+                <IonButton onClick={() => { heal('hero') }}>Rest</IonButton>
               </IonRow>
               <div hidden={!hideAtkMenu} className="border">
                 <IonRow>
-                  <IonButton onClick={() => adventure()}>Low attack</IonButton>
-                  <IonButton onClick={() => { updateHero('exp', 10) }}>Super Attack</IonButton>
+                  <IonButton onClick={() => h_atk('low')}>Low attack</IonButton>
+                  <IonButton onClick={() => h_atk('high')}>Super Attack</IonButton>
                 </IonRow>
                 <IonRow>
-                  <IonButton onClick={() => adventure()}>Heal</IonButton>
+                  <IonButton onClick={() => heal('hero')}>Heal</IonButton>
                   <IonButton onClick={() => adventure()}>Escape</IonButton>
                 </IonRow>
               </div>
