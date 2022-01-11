@@ -216,7 +216,7 @@ function check_vil_life(life_lose: number){
     <IonPage className="margin">
       <IonHeader >
         <IonToolbar>
-          <IonTitle>Jojo's Adventure</IonTitle>
+          <IonTitle>Jojo's Adventure 0.5</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
